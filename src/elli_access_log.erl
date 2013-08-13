@@ -103,15 +103,6 @@ handle_event(client_timeout, [_When], _Config) ->
 handle_event(elli_startup, [], Config) ->
     MsgOpts = msg_opts(Config),
 
-    case whereis(name(Config)) of
-        undefined ->
-            {ok, _Pid} = syslog:start_link(name(Config),
-                                           ip(Config),
-                                           port(Config));
-        Pid when is_pid(Pid) ->
-            ok
-    end,
-
     {ok, _} = elli_access_log_server:start_link(name(Config), MsgOpts),
     ok;
 
@@ -130,7 +121,6 @@ msg_opts(Config) ->
 msg_opts_with_defaults(MsgOpts) ->
     {ok, Host} = inet:gethostname(),
     Defaults = [{host, Host},
-                {ident, node()},
                 {facility, local0}],
 
     lists:ukeymerge(1, lists:keysort(1, MsgOpts),
