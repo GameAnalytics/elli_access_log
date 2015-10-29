@@ -51,7 +51,7 @@ handle_info(flush, State) ->
                                        {Msg, State#state.msg_opts}
                                end, flush(State#state.name)),
 
-    lists:map(fun ({Message, MsgOpt}) ->
+    lists:map(fun ({Message, _MsgOpt}) ->
                       syslog:log(State#state.log, info, Message)
               end, SyslogMessages),
 
